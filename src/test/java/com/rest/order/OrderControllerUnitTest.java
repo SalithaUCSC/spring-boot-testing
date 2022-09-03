@@ -1,5 +1,6 @@
 package com.rest.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.order.controllers.OrderController;
 import com.rest.order.models.Order;
 import com.rest.order.repositories.OrderRepository;
@@ -20,6 +21,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -37,6 +39,7 @@ public class OrderControllerUnitTest {
     private OrderService orderService;
 
     private Order order;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -60,6 +63,23 @@ public class OrderControllerUnitTest {
         mockMvc.perform(get("/api/orders/10"))
             .andDo(print())
             .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.buyer", is("andrew")))
+            .andExpect(jsonPath("$.id", is(10)))
+            .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+    @Test
+    public void testCreateOrder() throws Exception {
+        when(orderService.createOrder(order)).thenReturn(order);
+        System.out.println(objectMapper.writeValueAsString(order));
+        mockMvc.perform(
+            post("/api/orders")
+                .content(objectMapper.writeValueAsString(order))
+                .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isCreated())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.buyer", is("andrew")))
             .andExpect(jsonPath("$.id", is(10)))

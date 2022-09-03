@@ -8,7 +8,7 @@ public class OrderServiceUnitTest {
 
 
     @Test
-    public void getList() {
+    public void getOrdersList() {
 
     }
 }
