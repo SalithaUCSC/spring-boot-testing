@@ -5,6 +5,6 @@ spring:
     password: Admin22@mysql
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     generate-ddl: true

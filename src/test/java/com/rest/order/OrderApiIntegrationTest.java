@@ -62,20 +62,20 @@ public class OrderApiIntegrationTest {
     }
 
     @Test
-    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (5, 'sam', 50, 4)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "DELETE FROM orders WHERE id='4'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (20, 'sam', 50, 4)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM orders WHERE id='20'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testOrderById() throws JsonProcessingException {
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
         ResponseEntity<Order> response = restTemplate.exchange(
-                (createURLWithPort() + "/5"), HttpMethod.GET, entity, Order.class);
+                (createURLWithPort() + "/20"), HttpMethod.GET, entity, Order.class);
         Order orderRes = response.getBody();
-        String expected = "{\"id\":5,\"buyer\":\"sam\",\"price\":50.0,\"qty\":4}";
+        String expected = "{\"id\":20,\"buyer\":\"sam\",\"price\":50.0,\"qty\":4}";
         assertEquals(response.getStatusCodeValue(), 200);
         assertEquals(expected, objectMapper.writeValueAsString(orderRes));
         assert orderRes != null;
-        assertEquals(orderRes, orderService.getOrderById(5L));
-        assertEquals(orderRes.getBuyer(), orderService.getOrderById(5L).getBuyer());
-        assertEquals(orderRes, orderRepository.findById(5L).orElse(null));
+        assertEquals(orderRes, orderService.getOrderById(20L));
+        assertEquals(orderRes.getBuyer(), orderService.getOrderById(20L).getBuyer());
+        assertEquals(orderRes, orderRepository.findById(20L).orElse(null));
     }
 
     @Test
