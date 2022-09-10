@@ -79,6 +79,7 @@ public class OrderApiIntegrationTest {
     }
 
     @Test
+    @Sql(statements = "DELETE FROM orders WHERE id='3'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testCreateOrder() throws JsonProcessingException {
         Order order = new Order(3L, "peter", 30.0, 3);
         HttpEntity<String> entity = new HttpEntity<>(objectMapper.writeValueAsString(order), headers);
@@ -87,6 +88,7 @@ public class OrderApiIntegrationTest {
         assertEquals(response.getStatusCodeValue(), 201);
         Order orderRes = Objects.requireNonNull(response.getBody());
         assertEquals(orderRes.getBuyer(), "peter");
+        assertEquals(orderRes.getBuyer(), orderRepository.save(order).getBuyer());
     }
 
     @Test
