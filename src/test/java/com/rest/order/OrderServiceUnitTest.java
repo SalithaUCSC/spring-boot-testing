@@ -2,7 +2,6 @@ package com.rest.order;
 
 import com.rest.order.exceptions.OrderNotFoundException;
 import com.rest.order.models.Order;
-import com.rest.order.repositories.OrderRepository;
 import com.rest.order.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,9 +19,6 @@ public class OrderServiceUnitTest {
 
     @Mock
     private OrderService orderService;
-
-    @Mock
-    private OrderRepository orderRepository;
 
     @BeforeEach
     public void setup() {
@@ -72,5 +68,17 @@ public class OrderServiceUnitTest {
         Order orderCreated = orderArgumentCaptor.getValue();
         assertNotNull(orderCreated.getId());
         assertEquals("john", orderCreated.getBuyer());
+    }
+
+    @Test
+    public void testDeleteOrder() {
+        Order order = new Order(13L, "simen", 120.0, 10);
+        orderService.deleteOrderById(order.getId());
+        verify(orderService, times(1)).deleteOrderById(order.getId());
+        ArgumentCaptor<Long> orderArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(orderService).deleteOrderById(orderArgumentCaptor.capture());
+        Long orderIdDeleted = orderArgumentCaptor.getValue();
+        assertNotNull(orderIdDeleted);
+        assertEquals(13L, orderIdDeleted);
     }
 }

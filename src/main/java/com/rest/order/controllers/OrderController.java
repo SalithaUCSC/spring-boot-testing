@@ -32,4 +32,14 @@ public class OrderController {
         return ResponseEntity.ok().body(orderService.getOrderById(id));
     }
 
+    @DeleteMapping(path = "/orders/{id}")
+    public ResponseEntity<String> deleteOrderById(@PathVariable Long id) {
+        boolean deleteOrderById = orderService.deleteOrderById(id);
+        if (deleteOrderById) {
+            return new ResponseEntity<>(("Order deleted - Order ID:" + id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(("Order deletion failed - Order ID:" + id), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
