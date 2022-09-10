@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -86,6 +87,18 @@ public class OrderApiIntegrationTest {
         assertEquals(response.getStatusCodeValue(), 201);
         Order orderRes = Objects.requireNonNull(response.getBody());
         assertEquals(orderRes.getBuyer(), "peter");
+    }
+
+    @Test
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (6, 'alex', 75, 3)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM orders WHERE id='6'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void testDeleteOrder() {
+        ResponseEntity<String> response = restTemplate.exchange(
+                (createURLWithPort() + "/6"), HttpMethod.DELETE, null, String.class);
+        String orderRes = response.getBody();
+        assertEquals(response.getStatusCodeValue(), 200);
+        assertNotNull(orderRes);
+        assertEquals(orderRes, "Order deleted - Order ID:6");
     }
 
     private String createURLWithPort() {
