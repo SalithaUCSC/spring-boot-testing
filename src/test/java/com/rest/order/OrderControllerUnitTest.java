@@ -1,8 +1,8 @@
 package com.rest.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.order.controllers.OrderController;
 import com.rest.order.models.Order;
-import com.rest.order.repositories.OrderRepository;
 import com.rest.order.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,13 +13,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,12 +32,10 @@ public class OrderControllerUnitTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private OrderRepository orderRepository;
-
-    @MockBean
     private OrderService orderService;
 
     private Order order;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -64,6 +63,30 @@ public class OrderControllerUnitTest {
             .andExpect(jsonPath("$.buyer", is("andrew")))
             .andExpect(jsonPath("$.id", is(10)))
             .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+    @Test
+    public void testCreateOrder() throws Exception {
+        when(orderService.createOrder(order)).thenReturn(order);
+        mockMvc.perform(
+            post("/api/orders")
+                .content(objectMapper.writeValueAsString(order))
+                .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.buyer", is("andrew")))
+            .andExpect(jsonPath("$.id", is(10)))
+            .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteOrder() throws Exception {
+        when(orderService.deleteOrderById(order.getId())).thenReturn(true);
+        mockMvc.perform(delete("/api/orders/" + order.getId()))
+            .andDo(print())
+            .andExpect(status().isOk());
     }
 
 }

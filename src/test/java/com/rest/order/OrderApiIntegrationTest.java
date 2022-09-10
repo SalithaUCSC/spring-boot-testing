@@ -46,12 +46,6 @@ public class OrderApiIntegrationTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
-//    @BeforeTestClass
-//    public void setup() {
-//        orderRepository.deleteAll();
-//    }
-
-
     @Test
     @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (2, 'john', 24, 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM orders WHERE id='2'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
