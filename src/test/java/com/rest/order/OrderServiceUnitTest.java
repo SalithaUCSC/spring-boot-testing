@@ -1,39 +1,46 @@
 package com.rest.order;
 
+import com.rest.order.exceptions.OrderNotFoundException;
 import com.rest.order.models.Order;
+import com.rest.order.repositories.OrderRepository;
 import com.rest.order.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Collections;
+import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class OrderServiceUnitTest {
 
-
-    @MockBean
+    @Mock
     private OrderService orderService;
 
-    private Order order;
+    @Mock
+    private OrderRepository orderRepository;
 
     @BeforeEach
     public void setup() {
-        order = new Order(8L, "ben", 80.0, 5);
+
     }
 
     @Test
     public void testGetOrdersList() {
-        when(orderService.getOrders()).thenReturn(Collections.singletonList(order));
-        assertEquals(orderService.getOrders().size(), 1);
+        Order order1 = new Order(8L, "ben", 80.0, 5);
+        Order order2 = new Order(9L, "kevin", 70.0, 2);
+        when(orderService.getOrders()).thenReturn(Arrays.asList(order1, order2));
+        assertEquals(orderService.getOrders().size(), 2);
         assertEquals(orderService.getOrders().get(0).getBuyer(), "ben");
+        assertEquals(orderService.getOrders().get(1).getBuyer(), "kevin");
         assertEquals(orderService.getOrders().get(0).getPrice(), 80.0);
+        assertEquals(orderService.getOrders().get(1).getPrice(), 70.0);
         assertNotEquals(orderService.getOrders().get(0).getBuyer(), null);
+        assertNotEquals(orderService.getOrders().get(1).getBuyer(), null);
     }
 
     @Test
@@ -43,5 +50,27 @@ public class OrderServiceUnitTest {
         assertEquals(orderService.getOrderById(7L).getBuyer(), "george");
         assertEquals(orderService.getOrderById(7L).getPrice(), 60.0);
         assertNotEquals(orderService.getOrderById(7L).getBuyer(), null);
+    }
+
+
+    @Test
+    public void testGetInvalidOrderById() {
+        when(orderService.getOrderById(17L)).thenThrow(new OrderNotFoundException("Order Not Found with ID"));
+        Exception exception = assertThrows(OrderNotFoundException.class, () -> {
+            orderService.getOrderById(17L);
+        });
+        assertTrue(exception.getMessage().contains("Order Not Found with ID"));
+    }
+
+    @Test
+    public void testCreateOrder() {
+        Order order = new Order(12L, "john", 90.0, 6);
+        orderService.createOrder(order);
+        verify(orderService, times(1)).createOrder(order);
+        ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
+        verify(orderService).createOrder(orderArgumentCaptor.capture());
+        Order orderCreated = orderArgumentCaptor.getValue();
+        assertNotNull(orderCreated.getId());
+        assertEquals("john", orderCreated.getBuyer());
     }
 }

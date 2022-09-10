@@ -3,7 +3,6 @@ package com.rest.order;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.order.controllers.OrderController;
 import com.rest.order.models.Order;
-import com.rest.order.repositories.OrderRepository;
 import com.rest.order.services.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,9 +30,6 @@ public class OrderControllerUnitTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private OrderRepository orderRepository;
 
     @MockBean
     private OrderService orderService;
