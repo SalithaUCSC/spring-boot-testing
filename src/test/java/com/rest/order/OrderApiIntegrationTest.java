@@ -48,8 +48,8 @@ public class OrderApiIntegrationTest {
     }
 
     @Test
-    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (2, 'john', 24, 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(statements = "DELETE FROM orders WHERE id='2'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (22, 'john', 24.0, 1)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "DELETE FROM orders WHERE id='22'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testOrdersList() {
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
         ResponseEntity<List<Order>> response = restTemplate.exchange(
@@ -62,7 +62,7 @@ public class OrderApiIntegrationTest {
     }
 
     @Test
-    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (20, 'sam', 50, 4)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (20, 'sam', 50.0, 4)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM orders WHERE id='20'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testOrderById() throws JsonProcessingException {
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
@@ -92,7 +92,7 @@ public class OrderApiIntegrationTest {
     }
 
     @Test
-    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (6, 'alex', 75, 3)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "INSERT INTO orders(id, buyer, price, qty) VALUES (6, 'alex', 75.0, 3)", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "DELETE FROM orders WHERE id='6'", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testDeleteOrder() {
         ResponseEntity<String> response = restTemplate.exchange(
