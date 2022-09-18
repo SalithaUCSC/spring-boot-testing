@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class OrderRepositoryTest {
+public class OrderRepositoryUnitTest {
 
     @Autowired
     OrderRepository orderRepository;
