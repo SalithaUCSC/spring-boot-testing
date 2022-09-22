@@ -3,6 +3,7 @@ package com.rest.order;
 import com.rest.order.models.Order;
 import com.rest.order.repositories.OrderRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,10 +32,10 @@ public class OrderRepositoryUnitTest {
         orderRepository.save(new Order(200L, "ben", 100.0, 5));
     }
 
-//    @AfterEach
-//    public void destroy() {
-//        orderRepository.deleteAll();
-//    }
+    @AfterEach
+    public void destroy() {
+        orderRepository.deleteAll();
+    }
 
     @Test
     public void testGetAllOrders() {
