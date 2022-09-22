@@ -3,7 +3,8 @@ package com.rest.order;
 import com.rest.order.models.Order;
 import com.rest.order.repositories.OrderRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -19,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrderRepositoryUnitTest {
 
     @Autowired
@@ -31,10 +31,10 @@ public class OrderRepositoryUnitTest {
         orderRepository.save(new Order(200L, "ben", 100.0, 5));
     }
 
-    @AfterEach
-    public void destroy() {
-        orderRepository.deleteAll();
-    }
+//    @AfterEach
+//    public void destroy() {
+//        orderRepository.deleteAll();
+//    }
 
     @Test
     public void testGetAllOrders() {
