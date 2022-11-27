@@ -4,9 +4,6 @@ on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
-env:
-  AWS_REGION : us-east-1
-
 jobs:
   analyzeWithMaven:
     runs-on: ubuntu-latest
@@ -15,6 +12,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: 17
+          distribution: zulu
       - name: Setup Maven
         uses: gradle/gradle-build-action@v2
       - name: Build with Maven
