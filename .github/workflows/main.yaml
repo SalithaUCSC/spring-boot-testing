@@ -13,8 +13,6 @@ jobs:
         with:
           java-version: 17
           distribution: zulu
-      - name: Setup Maven
-        uses: gradle/gradle-build-action@v2
       - name: Build with Maven
         run: mvn clean install
       - name: Execute Tests
